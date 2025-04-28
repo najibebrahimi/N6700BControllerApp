@@ -1,0 +1,162 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:N6700BControllerApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+		xmlns:b="using:N6700BControllerApp.Behaviours"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="800"
+        x:Class="N6700BControllerApp.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="N6700BControllerApp"
+		Width="500" Height="800"
+        Background="Orange">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+
+	
+	<StackPanel Orientation="Vertical" Spacing="10">
+		<TextBlock Text="N6700B Power Supply Controller" Margin="20 20 10 10  "/>
+		
+		<StackPanel Orientation="Horizontal">
+			<TextBox Text="{Binding IpAddress, Mode=TwoWay}" IsEnabled="{Binding IsDisconnected}" Margin="10 10 10 10" Width="250" Watermark="Enter Ip Address"/>
+			
+			<Button Content="{Binding ConnectionButtonText}" Command="{Binding ToggleConnectionCommand}" Width="120"/>
+		</StackPanel>
+
+		<StackPanel Orientation ="Horizontal" Margin="16">
+			<TextBlock Text="Status:" FontSize="14" />
+			<Ellipse Margin="10 0 0 0 " Width="14" Height="14" Fill="{Binding ConnectionStatusColor}" Stroke="Black" StrokeThickness="1"/>
+			<TextBlock Text="{Binding ConnectionStatus}" Foreground="{Binding ConnectionStatusColor}"
+					   FontSize="14" Margin=" 10 0 0 0 " />	
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" Margin="16 ">
+			<TextBlock Text="Voltage(V):" FontSize="14"/>
+			<!--<TextBox Text="{Binding Voltage}" Width="100" />-->
+			<NumericUpDown  Width="200" Value="{Binding Voltage}" Increment="0.05" Minimum="0.0" Maximum="20"
+							/>
+			<Button Content="Set Voltage" Command="{Binding SetVoltageCommand}"/>
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" Margin="16">
+			<TextBlock Text="Current(A):" FontSize="14"/>
+			<!--<TextBox Text="{Binding Current}" Width="100" />-->
+			<NumericUpDown Width="200" Value="{Binding Current}" Increment="0.05" Minimum="0.0002" Maximum="3"/>
+			<Button Content="Set Current" Command="{Binding SetCurrentCommand}"/>
+			
+			
+		</StackPanel>
+
+		<StackPanel Orientation="Horizontal" Margin="16">
+			<TextBlock Text="Output:" FontSize="15"/>
+			
+
+			<ToggleSwitch IsChecked="{Binding IsOutputOn, Mode=TwoWay}"
+			Command="{Binding ToggleOutputCommand}"			  
+              Margin="0"/>
+		</StackPanel>
+
+		
+
+		<StackPanel Margin="16">
+			
+			<TextBlock Text="Live Readings" FontWeight="Bold" Margin="0,0,0,4"/>
+			<Button Content="Update"
+					Command="{Binding ReadLiveMeasurementsCommand}"
+					HorizontalAlignment="Left"
+					Margin="0,8,0,4"/>	
+
+			
+			<Border BorderBrush="Gray" BorderThickness="1" CornerRadius="3" Padding="10" Margin="1">
+				
+				<StackPanel Orientation="Vertical" Margin="10">
+
+					<TextBlock Margin="10">
+						<Run Text="Voltage : "/>
+						<Run Text="{Binding MeasuredVoltage}" />
+						<Run Text=" V" FontWeight="Bold"/>	
+					</TextBlock>
+
+					<TextBlock Margin="10">
+						<Run Text="Current : "/>
+						<Run Text="{Binding MeasuredCurrent}" />
+						<Run Text=" A" FontWeight="Bold"/>
+					</TextBlock>
+
+					<TextBlock Margin="10">
+						<Run Text="Power   : "/>
+						<Run Text="{Binding MeasuredPower}" />
+						<Run Text=" W "  FontWeight="Bold"/>
+					</TextBlock>
+					
+				</StackPanel>
+			</Border>
+		</StackPanel>
+
+
+		<!--<Border BorderBrush="Black" BorderThickness="1" CornerRadius="4" Padding="8">
+			<StackPanel >
+				
+				<TextBlock Text="Logs" FontWeight="Bold" Margin="0,0,0,8"/>
+
+				
+				<StackPanel >
+					<TextBlock Text="[12:30] Connected to N6700B" Margin="0,0,0,2"/>
+					<TextBlock Text="[12:31] Voltage set to 12V" Margin="0,0,0,2"/>
+					<TextBlock Text="[12:32] Output turned ON" Margin="0,0,0,2"/>
+					<TextBlock Text="[12:33] Current set to 2.5A" Margin="0,0,0,2"/>
+				</StackPanel>
+
+				
+				<Separator Margin="0,8,0,8"/>
+
+				
+				<Button Content="[Save Log]" HorizontalAlignment="Right"/>
+			</StackPanel>
+		</Border>-->
+
+
+		<Border BorderBrush="Black" BorderThickness="1" CornerRadius="4" Padding="8">
+			<StackPanel>
+				<TextBlock Text="Logs" FontWeight="Bold" Margin="0,0,0,8"/>
+
+				
+				<ListBox ItemsSource="{Binding Logs}" Height="100">
+					<i:Interaction.Behaviors>
+						<b:ScrollToEndBehavior />
+					</i:Interaction.Behaviors>
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding}" Margin="0,0,0,2"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+				<Separator Margin="0,8,0,8"/>
+
+				
+				<Button Content="[Save Log]" HorizontalAlignment="Right"
+						Command="{Binding SaveLogCommand}"/>
+			</StackPanel>
+		</Border>
+
+
+
+
+
+
+
+
+
+
+	</StackPanel>
+		
+	
+	
+	
+</Window>
